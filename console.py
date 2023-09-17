@@ -96,18 +96,10 @@ class HBNBCommand(cmd.Cmd):
         """ Method to exit the HBNB console"""
         exit()
 
-    def help_quit(self):
-        """ Prints the help documentation for quit  """
-        print("Exits the program with formatting\n")
-
     def do_EOF(self, arg):
         """ Handles EOF to exit program """
         print()
         exit()
-
-    def help_EOF(self):
-        """ Prints the help documentation for EOF """
-        print("Exits the program without formatting\n")
 
     def emptyline(self):
         """ Overrides the emptyline method of CMD """
@@ -125,11 +117,6 @@ class HBNBCommand(cmd.Cmd):
         storage.save()
         print(new_instance.id)
         storage.save()
-
-    def help_create(self):
-        """ Help information for the create method """
-        print("Creates a class of any type")
-        print("[Usage]: create <className>\n")
 
     def do_show(self, args):
         """ Method to show an individual object """
@@ -159,11 +146,6 @@ class HBNBCommand(cmd.Cmd):
         except KeyError:
             print("** no instance found **")
 
-    def help_show(self):
-        """ Help information for the show command """
-        print("Shows an individual instance of a class")
-        print("[Usage]: show <className> <objectId>\n")
-
     def do_destroy(self, args):
         """ Destroys a specified object """
         new = args.partition(" ")
@@ -192,11 +174,6 @@ class HBNBCommand(cmd.Cmd):
         except KeyError:
             print("** no instance found **")
 
-    def help_destroy(self):
-        """ Help information for the destroy command """
-        print("Destroys an individual instance of a class")
-        print("[Usage]: destroy <className> <objectId>\n")
-
     def do_all(self, args):
         """ Shows all objects, or all objects of a class"""
         print_list = []
@@ -215,11 +192,6 @@ class HBNBCommand(cmd.Cmd):
 
         print(print_list)
 
-    def help_all(self):
-        """ Help information for the all command """
-        print("Shows all objects, or all of a class")
-        print("[Usage]: all <className>\n")
-
     def do_count(self, args):
         """Count current number of class instances"""
         count = 0
@@ -227,10 +199,6 @@ class HBNBCommand(cmd.Cmd):
             if args == k.split('.')[0]:
                 count += 1
         print(count)
-
-    def help_count(self):
-        """ """
-        print("Usage: count <class_name>")
 
     def do_update(self, args):
         """ Updates a certain object with new info """
@@ -315,10 +283,93 @@ class HBNBCommand(cmd.Cmd):
 
         new_dict.save()  # save updates to file
 
+    # AUTO-COMPLETION
+
+    def complete_create(self, text, line, begidx, endix):
+        """
+        Auto-completion for the 'create' command
+        """
+        return [completion for completion in self.classes
+                if completion.startswith(text)]
+
+    def complete_show(self, text, line, begidx, endix):
+        """
+        Auto-completion for the 'show' command
+        """
+        return [completion for completion in self.classes
+                if completion.startswith(text)]
+
+    def complete_destroy(self, text, line, begidx, endix):
+        """
+        Auto-completion for the 'destroy' command
+        """
+        return [completion for completion in self.classes
+                if completion.startswith(text)]
+
+    def complete_all(self, text, line, begidx, endix):
+        """
+        Auto-completion for the 'all' command
+        """
+        return [completion for completion in self.classes
+                if completion.startswith(text)]
+
+    def complete_update(self, text, line, begidx, endix):
+        """
+        Auto-completion for the 'update' command
+        """
+        return [completion for completion in self.classes
+                if completion.startswith(text)]
+
+    # HELP
+
     def help_update(self):
-        """ Help information for the update class """
-        print("Updates an object with new information")
-        print("Usage: update <className> <id> <attName> <attVal>\n")
+        """
+        Provide documentation on the 'update' command
+        """
+        print("Update an instance based on class name and id by adding or \
+updating attributes")
+        print("Usage: update <class name> <id> <attribute> <value>")
+        print()
+
+    def help_all(self):
+        """
+        Provide documentation on the 'all' command
+        """
+        print("Print all string representation of all instances based or not \
+on the class name")
+        print("Usage:\n\tall [<class name>]")
+        print()
+
+    def help_destroy(self):
+        """
+        Provide documentation on the 'destroy' command
+        """
+        print("Delete an instance based on the class name and id")
+        print("Usage:\n\tdestroy <class name> <id>")
+        print()
+
+    def help_show(self):
+        """
+        Provide documentation on the 'show' command
+        """
+        print("Print the string representation of an instance based on \
+the class name and id")
+        print("Usage:\n\tshow <class name> <id>")
+        print()
+
+    def help_create(self):
+        """
+        Provide documentation on the 'create' command
+        """
+        print("Create a new instance of 'BaseModel'")
+        print("Usage:\n\tcreate <class name>")
+        print()
+
+    def help_quit(self):
+        """
+        Provide documentation on the quit command
+        """
+        print("Quit command to exit the program\n")
 
 
 if __name__ == "__main__":
