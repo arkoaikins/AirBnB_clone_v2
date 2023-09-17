@@ -26,7 +26,6 @@ class DBStorage:
                 'host': "HBNB_MYSQL_HOST",
                 'db': "HBNB_MYSQL_DB",
                 'env': "HBNB_ENV"}
-        # 'env': "HBNB_ENV"}
 
         self.__env = dict()
 
@@ -67,15 +66,16 @@ class DBStorage:
         """
         from models.city import City
         from models.state import State
+        from models.user import User
         '''
         from models.place import Place
-        from models.user import User
         from models.amenity import Amenity
         from models.review import Review
         '''
 
+        # Update it Always after mapping a class
         # classes = [City, State, Place, User, Amenity, Review]
-        classes = [City, State]
+        classes = [City, State, User]
 
         objs = list()
         if cls is None:
@@ -129,9 +129,9 @@ class DBStorage:
         """
         from models.city import City
         from models.state import State
+        from models.user import User
         '''
         from models.place import Place
-        from models.user import User
         from models.amenity import Amenity
         from models.review import Review
         '''
