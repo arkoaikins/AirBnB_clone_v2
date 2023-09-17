@@ -1,0 +1,9 @@
+# Python cache directory
+__pycache__/
+
+# Temporary files
+*~
+*.swp
+
+# JSON storage
+*.json
