@@ -2,6 +2,8 @@
 """ Console Module """
 import cmd
 import sys
+import shlex    # Unix shell-like syntax analyzer
+from utility import param_to_dict
 from models.base_model import BaseModel
 from models.__init__ import storage
 from models.user import User
@@ -29,6 +31,9 @@ class HBNBCommand(cmd.Cmd):
              'max_guest': int, 'price_by_night': int,
              'latitude': float, 'longitude': float
             }
+
+    # Some attributes that are not allowed to be modified manually
+    not_updatable = ['id', 'created_at', 'updated_at']
 
     def preloop(self):
         """Prints if isatty is false"""
@@ -105,16 +110,70 @@ class HBNBCommand(cmd.Cmd):
         """ Overrides the emptyline method of CMD """
         pass
 
+    # def do_create(self, args):
+    #    """ Create an object of any class"""
+    #   if not args:
+    #       print("** class name missing **")
+    #       return
+    #   elif args not in HBNBCommand.classes:
+    #       print("** class doesn't exist **")
+    #       return
+    #   new_instance = HBNBCommand.classes[args]()
+    #   storage.save()
+    #   print(new_instance.id)
+    #   storage.save()
+
     def do_create(self, args):
-        """ Create an object of any class"""
+        """
+        Create a new instane
+
+        Param syntax: <key name>="<value>"
+
+        * Any double quote inside the value must be escaped with a bacsklash
+        * All underscores in the value are replaced by spaces.
+
+        Usage:
+        ======
+        * create <Class name>
+        * create <Class name> <param 1> <param 2> ... <param n>
+        """
+        # Fetcah all arguments
+        try:
+            args = shlex.split(args, posix=True, comments=False)
+        except Exception as e:
+            print("** Error: {} **".format(e))
+
+        """
+        Test to see actual arguments
+        for pos in range(len(args)):
+            print("\targ[0]: '{}'".format(pos, args[pos]))
+        """
         if not args:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
+
+        _class = args[0]
+        if _class not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[args]()
-        storage.save()
+
+        # Create a dictionary of attributes for the instance
+        attr = dict()
+        for arg in args[1:]:
+            # convert paameter string to dictionary
+            element = param_to_dict(arg)
+            if (type(element) == dict) and (len(element) != 0):
+                attr.update(element)
+
+        # print ("\nAttributes: '{}'\n".format(attr))   # test
+        new_instance = HBNBCommand.classes[_class]()
+
+        # Update the instance with the attributes
+        for key, value in attr.items():
+            setattr(new_instance, key, value)
+
+        # Save the instance to storage
+        new_instance.save()
         print(new_instance.id)
         storage.save()
 
@@ -274,6 +333,14 @@ class HBNBCommand(cmd.Cmd):
                 if not att_val:  # check for att_value
                     print("** value missing **")
                     return
+
+                # Restrict updating of specifi attributes
+                if att_name in HBNBCommand.not_updatable:
+                    info = "** The \"{}\" attribute is not allowed \
+to be updated **"
+                    print(info.format(att_name))
+                    return
+
                 # type cast as necessary
                 if att_name in HBNBCommand.types:
                     att_val = HBNBCommand.types[att_name](att_val)
@@ -361,8 +428,15 @@ the class name and id")
         """
         Provide documentation on the 'create' command
         """
-        print("Create a new instance of 'BaseModel'")
+        print("Create a new instance without attributes")
         print("Usage:\n\tcreate <class name>")
+        print()
+        print("Or create a new instance with attributes")
+        print("Usage:\n\tcreate <Class name> <param 1> ... <param n>")
+        print("Param syntax: <key name>='<value>'")
+        print("Eg. name='My_little_house'")
+        print("Any double quote inside value must be escaped with a slash")
+        print("All underscores in the value will be replaced by spaces.")
         print()
 
     def help_quit(self):
