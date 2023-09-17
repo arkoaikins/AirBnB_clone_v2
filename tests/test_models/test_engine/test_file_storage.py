@@ -195,6 +195,53 @@ class test_FileStorage(unittest.TestCase):
 
             self.tearDown()
 
+    def test_delete(self):
+        """
+        Ensure that the 'delete' method is implemented
+        Deletes an object from loaded storage
+        """
+        storage = FileStorage()
+        __classes = [BaseModel, User, State, City, Amenity, Place, Review]
+
+        # These are individual tests for the classes
+        for _cls in __classes:
+            self.setUp()
+
+            self.assertFalse(os.path.exists(self.file_path))
+            # The line of code below should not raise an error
+            storage.reload()
+
+            # Create some objects
+            foo = _cls()
+            bar = _cls()
+            storage.save()
+            self.assertTrue(os.path.exists(self.file_path))
+
+            # Confirm objects were saved
+            objs = [foo, bar]
+            new_storage = FileStorage()
+            new_storage.reload()
+
+            # Delete objects
+            for obj in objs:
+                with self.subTest(obj=obj):
+                    key = test_FileStorage.get_key(obj)
+                    # print("Deleting obj: <{}>".format(key))
+                    new_storage.delete(obj)
+            new_storage.save()
+
+            # Confirm changes are reflected in previous storage
+            storage.reload()
+
+            for obj in objs:
+                storage_objs = storage.all()
+                with self.subTest(obj=obj):
+                    key = test_FileStorage.get_key(obj)
+                    # print("Confirming absence: <{}>".format(key))
+                    self.assertNotIn(key, storage_objs)
+
+            self.tearDown()
+
     @staticmethod
     def get_key(obj):
         """
