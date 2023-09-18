@@ -3,7 +3,6 @@
 import models
 from models.base_model import BaseModel
 from models.base_model import Base
-from models import (DBStorage, FileStorage)
 from sqlalchemy import (Column, String, Integer, Float, ForeignKey, Table)
 from sqlalchemy.orm import relationship
 
@@ -11,41 +10,69 @@ from sqlalchemy.orm import relationship
 """
 An association table between the 'Place' and 'Amenity' models
 """
-place_amenity = Table("place_amenity",
-                      Base.metadata,
-                      Column("place_id", String(60),
-                             ForeignKey("places.id"),
-                             primary_key=True,
-                             nullable=False),
-                      Column("amenity_id", String(60),
-                             ForeignKey("amenities.id"),
-                             primary_key=True,
-                             nullable=False))
+if isinstance(models.storage, models.DBStorage):
+    place_amenity = Table("place_amenity",
+                          Base.metadata,
+                          Column("place_id", String(60),
+                                 ForeignKey("places.id"),
+                                 primary_key=True,
+                                 nullable=False),
+                          Column("amenity_id", String(60),
+                                 ForeignKey("amenities.id"),
+                                 primary_key=True,
+                                 nullable=False))
 
 
 class Place(BaseModel, Base):
-    """ A place to stay """
+    """ A place to stay
+
+    Attributes:
+        city_id:(str)empty string: it will be the City.id
+        user_id: (str)empty string: it will be the User.id
+        name: (str) empty string
+        description: (str) empty string
+        number_rooms: integer - 0
+        number_bathrooms: integer - 0
+        max_guest: integer - 0
+        price_by_night: integer - 0
+        latitude: float - 0.0
+        longitude:float - 0.0
+        amenity_ids:list of string -empty list: it will be
+        the list of Amenity.id later
+    """
     __tablename__ = 'places'
 
-    city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
-    user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
-    name = Column(String(128), nullable=False)
-    description = Column(String(1024), nullable=True)
-    number_rooms = Column(Integer, nullable=False, default=(0))
-    number_bathrooms = Column(Integer, nullable=False, default=(0))
-    max_guest = Column(Integer, nullable=False, default=(0))
-    price_by_night = Column(Integer, nullable=False, default=(0))
-    latitude = Column(Float, nullable=True)
-    longitude = Column(Float, nullable=True)
-    amenity_ids = []
+    if isinstance(models.storage, models.DBStorage):
+        city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
+        user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
+        name = Column(String(128), nullable=False)
+        description = Column(String(1024), nullable=True)
+        number_rooms = Column(Integer, nullable=False, default=(0))
+        number_bathrooms = Column(Integer, nullable=False, default=(0))
+        max_guest = Column(Integer, nullable=False, default=(0))
+        price_by_night = Column(Integer, nullable=False, default=(0))
+        latitude = Column(Float, nullable=True)
+        longitude = Column(Float, nullable=True)
+        amenity_ids = []
 
-    if isinstance(models.storage, DBStorage):
         reviews = relationship('Review', backref='place',
                                cascade="all, delete, delete-orphan")
         amenities = relationship('Amenity', secondary=place_amenity,
                                  back_populates='place_amenities',
                                  viewonly=False)
-    elif isinstance(models.storage, FileStorage):
+    elif isinstance(models.storage, models.FileStorage):
+        city_id = ""
+        user_id = ""
+        name = ""
+        description = ""
+        number_rooms = 0
+        number_bathrooms = 0
+        max_guest = 0
+        price_by_night = 0
+        latitude = 0.0
+        longitude = 0.0
+        amenity_ids = []
+
         @property
         def reviews(self):
             """

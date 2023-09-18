@@ -4,15 +4,23 @@ from models.base_model import BaseModel
 from models.base_model import Base
 from sqlalchemy import (Column, String)
 from sqlalchemy.orm import relationship
-from models.place import place_amenity
+import models
 
 
 class Amenity(BaseModel, Base):
     """
-    Different amenities presenet in a place
+    Different amenities present in a place
+
+    Attribute:
+        name: (str)Name of Amenity
     """
     __tablename__ = 'amenities'
 
-    name = Column(String(128), nullable=False)
-    place_amenities = relationship('Place', secondary=place_amenity,
-                                   back_populates="amenities")
+    if isinstance(models.storage, models.DBStorage):
+        from models.place import place_amenity
+
+        name = Column(String(128), nullable=False)
+        place_amenities = relationship('Place', secondary=place_amenity,
+                                       back_populates="amenities")
+    elif isinstance(models.storage, models.FileStorage):
+        name = ""

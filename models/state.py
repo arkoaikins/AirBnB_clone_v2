@@ -11,16 +11,22 @@ from models import FileStorage
 
 
 class State(BaseModel, Base):
-    """ State class """
-    __tablename__ = 'states'
+    """ State class
 
-    name = Column(String(128), nullable=False)
+    Attribute:
+        name: str(empty string-to be filled with
+        state name
+    """
+    __tablename__ = 'states'
 
     # Relationship
     if isinstance(models.storage, DBStorage):
+        name = Column(String(128), nullable=False)
         cities = relationship('City', backref='state',
                               cascade="all, delete, delete-orphan")
     elif isinstance(models.storage, FileStorage):
+        name = ""
+
         @property
         def cities(self):
             """
