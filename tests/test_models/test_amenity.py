@@ -2,8 +2,12 @@
 """
 Tests for the Amenity model
 """
+import unittest
+import models
 from tests.test_models.test_base_model import test_BaseModel
 from models.amenity import Amenity
+from sqlalchemy import Column
+from sqlalchemy.orm import relationship
 
 
 class test_Amenity(test_BaseModel):
@@ -30,6 +34,7 @@ class test_Amenity(test_BaseModel):
         """
         super().tearDown()
 
+    @unittest.skipUnless(models.storage_type == 'file', "Using file storage")
     def test_user_attrs(self):
         """
         Ensure that the correct attributes are present in the model
@@ -44,4 +49,4 @@ class test_Amenity(test_BaseModel):
         for attr, attr_type in attrs.items():
             with self.subTest(attr=attr, attr_type=attr_type):
                 self.assertTrue(hasattr(foo, attr))
-                self.assertEqual(type(getattr(foo, attr)), attr_type)
+                self.assertTrue(type(getattr(foo, attr)) is attr_type)

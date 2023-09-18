@@ -2,6 +2,8 @@
 """
 Tests for the User model
 """
+import models
+import unittest
 from tests.test_models.test_base_model import test_BaseModel
 from models.user import User
 
@@ -30,6 +32,7 @@ class test_User(test_BaseModel):
         """
         super().tearDown()
 
+    @unittest.skipUnless(models.storage_type == 'file', "For file storage")
     def test_user_attrs(self):
         """
         Ensure that the correct attributes are present in the model

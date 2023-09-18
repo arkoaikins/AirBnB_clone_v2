@@ -4,6 +4,7 @@ Tests for the FileStorage class
 """
 import os
 import unittest
+import models
 import datetime
 import pep8
 from models.engine.file_storage import FileStorage
@@ -86,6 +87,7 @@ class test_FileStorage(unittest.TestCase):
         FileStorage().save()
         self.assertTrue(os.path.exists(self.file_path))
 
+    @unittest.skipIf(models.storage_type == 'db', "For file storage")
     def test_all(self):
         """
         Ensure that the ``all`` method is implemented
@@ -106,6 +108,7 @@ class test_FileStorage(unittest.TestCase):
         key = type(bar).__name__ + '.' + bar.id
         self.assertEqual(bar, storage.all()[key])
 
+    @unittest.skipIf(models.storage_type == 'db', "For file storage")
     def test_new(self):
         """
         Ensure that the ``new`` method is implemented
@@ -128,6 +131,7 @@ class test_FileStorage(unittest.TestCase):
         storage.new(foo)
         self.assertIn(key, storage.all().keys())
 
+    @unittest.skipIf(models.storage_type == 'db', "For file storage")
     def test_save(self):
         """
         Ensure that the 'save' method is implemented
@@ -161,6 +165,7 @@ class test_FileStorage(unittest.TestCase):
                     self.assertIn(key, storage.all().keys())
             self.tearDown()
 
+    @unittest.skipIf(models.storage_type == 'db', "For file storage")
     def test_reload(self):
         """
         Ensure that the 'reload' method is implemented
@@ -200,6 +205,7 @@ class test_FileStorage(unittest.TestCase):
 
             self.tearDown()
 
+    @unittest.skipIf(models.storage_type == 'db', "For file storage")
     def test_delete(self):
         """
         Ensure that the 'delete' method is implemented

@@ -2,6 +2,8 @@
 """
 Tests for the Place model
 """
+import models
+import unittest
 from tests.test_models.test_base_model import test_BaseModel
 from models.place import Place
 
@@ -30,6 +32,7 @@ class test_Place(test_BaseModel):
         """
         super().tearDown()
 
+    @unittest.skipIf(models.storage_type == 'db', "For file storage")
     def test_user_attrs(self):
         """
         Ensure that the correct attributes are present in the model

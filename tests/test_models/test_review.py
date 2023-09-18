@@ -2,6 +2,8 @@
 """
 Tests for the Review model
 """
+import models
+import unittest
 from tests.test_models.test_base_model import test_BaseModel
 from models.review import Review
 
@@ -30,6 +32,7 @@ class test_Review(test_BaseModel):
         """
         super().tearDown()
 
+    @unittest.skipUnless(models.storage_type == 'file', "Using file storage")
     def test_user_attrs(self):
         """
         Ensure that the correct attributes are present in the model

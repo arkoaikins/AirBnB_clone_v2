@@ -7,7 +7,9 @@ import os
 import pep8
 import json
 import datetime
+import models
 from models.base_model import BaseModel
+from models.base_model import Base
 from tests import config
 
 
@@ -93,6 +95,7 @@ class test_BaseModel(unittest.TestCase):
         self.assertTrue(hasattr(foo, 'created_at'))
         self.assertTrue(type(foo.created_at), datetime)
 
+    @unittest.skipUnless(models.storage_type == 'file', "Using file storage")
     def test_BaseModel_updated_at(self):
         """
         Ensure that ``BaseModel.updated_at`` is implemented
@@ -117,6 +120,7 @@ class test_BaseModel(unittest.TestCase):
 
         self.assertEqual(str(foo), expected_str)
 
+    @unittest.skipUnless(models.storage_type == 'file', "Using file storage")
     def test_save(self):
         """
         Ensure that the ``save`` method is implemented

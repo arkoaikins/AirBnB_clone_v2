@@ -2,6 +2,8 @@
 """
 Tests for the City model
 """
+import unittest
+import models
 from tests.test_models.test_base_model import test_BaseModel
 from models.city import City
 
@@ -30,6 +32,7 @@ class test_City(test_BaseModel):
         """
         super().tearDown()
 
+    @unittest.skipIf(models.storage_type == 'db', "For file storage")
     def test_user_attrs(self):
         """
         Ensure that the correct attributes are present in the model
