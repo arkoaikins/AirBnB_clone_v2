@@ -64,18 +64,18 @@ class DBStorage:
         Return all objeccts based on or not on the class
         if cls is invalid, an empty dictionary is returned
         """
+        from models.place import Place
         from models.city import City
         from models.state import State
         from models.user import User
         '''
-        from models.place import Place
         from models.amenity import Amenity
         from models.review import Review
         '''
 
         # Update it Always after mapping a class
         # classes = [City, State, Place, User, Amenity, Review]
-        classes = [City, State, User]
+        classes = [City, State, User, Place]
 
         objs = list()
         if cls is None:
@@ -127,11 +127,11 @@ class DBStorage:
         =====================
         Create all tables if not existing and create a database session
         """
+        from models.place import Place
         from models.city import City
         from models.state import State
         from models.user import User
         '''
-        from models.place import Place
         from models.amenity import Amenity
         from models.review import Review
         '''
