@@ -176,7 +176,7 @@ class HBNBCommand(cmd.Cmd):
         # Save the instance to storage
         new_instance.save()
         print(new_instance.id)
-        # storage.save()
+        storage.save()
 
         """
         Test object in storage
