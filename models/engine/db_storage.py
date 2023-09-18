@@ -68,14 +68,14 @@ class DBStorage:
         from models.city import City
         from models.state import State
         from models.user import User
+        from models.review import Review
         '''
         from models.amenity import Amenity
-        from models.review import Review
         '''
 
         # Update it Always after mapping a class
         # classes = [City, State, Place, User, Amenity, Review]
-        classes = [City, State, User, Place]
+        classes = [City, State, User, Place, Review]
 
         objs = list()
         if cls is None:
@@ -131,9 +131,9 @@ class DBStorage:
         from models.city import City
         from models.state import State
         from models.user import User
+        from models.review import Review
         '''
         from models.amenity import Amenity
-        from models.review import Review
         '''
 
         # Create all tables
