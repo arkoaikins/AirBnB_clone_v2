@@ -41,7 +41,8 @@ amenity_3.save()
 place_2.amenities.append(amenity_1)
 place_2.amenities.append(amenity_2)
 place_2.amenities.append(amenity_3)
-# place_2.save()
+place_2.save()
+# place_2.save() - it doesn't save on its own
 
 storage.save()
 
