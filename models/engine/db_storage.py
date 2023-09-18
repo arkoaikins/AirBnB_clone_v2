@@ -69,9 +69,7 @@ class DBStorage:
         from models.state import State
         from models.user import User
         from models.review import Review
-        '''
         from models.amenity import Amenity
-        '''
 
         # Update it Always after mapping a class
         # classes = [City, State, Place, User, Amenity, Review]
@@ -132,9 +130,7 @@ class DBStorage:
         from models.state import State
         from models.user import User
         from models.review import Review
-        '''
         from models.amenity import Amenity
-        '''
 
         # Create all tables
         Base.metadata.create_all(self.__engine)
