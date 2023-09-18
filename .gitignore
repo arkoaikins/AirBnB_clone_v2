@@ -7,3 +7,6 @@ __pycache__/
 
 # JSON storage
 *.json
+
+# Virtual environment
+venv/
