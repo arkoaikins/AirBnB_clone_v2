@@ -40,7 +40,15 @@ user_1.first_name = 'Ebube'
 user_1.last_name = 'Onwuta'
 user_1.password = 'ebube133pwd'
 user_1.save()
-print("Created user_1 - > {}".format(user_1))
+print("Created user_1 -> {}".format(user_1))
+
+user_2 = User()
+user_2.email = "bob@hbtn.io"
+user_2.password = 'bobpwd'
+user_2.first_name = "Bob"
+user_2.last_name = "Dylan"
+user_2.save()
+print("Created user_2 -> {}".format(user_2))
 
 place_1 = Place()
 place_1.city_id = city_1.id
