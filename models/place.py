@@ -60,7 +60,7 @@ class Place(BaseModel, Base):
         amenities = relationship('Amenity', secondary=place_amenity,
                                  back_populates='place_amenities',
                                  viewonly=False)
-    elif isinstance(models.storage, models.FileStorage):
+    else:
         city_id = ""
         user_id = ""
         name = ""
