@@ -72,7 +72,7 @@ place_2.save()
 review_1 = Review()
 review_1.place_id = place_1.id
 review_1.user_id = user_1.id
-review_1.text = "Amazing place,huge kitchen"
+review_1.text = "Amazing place, huge kitchen"
 review_1.save()
 
 review_2 = Review()
