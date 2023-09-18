@@ -86,6 +86,6 @@ class Place(BaseModel, Base):
             from models.amenity import Amenity
             from models import storage
 
-            if isinstance(obj, Amenity):
+            if isinstance(obj, Amenity) and obj.id not in self.amenity_ids:
                 self.amenity_ids.append(obj.id)
                 self.save()
