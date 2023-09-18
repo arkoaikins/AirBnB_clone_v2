@@ -98,7 +98,9 @@ class test_FileStorage(unittest.TestCase):
 
         # Objects
         foo = _cls()
+        foo.save()
         bar = _cls()
+        bar.save()
         key = type(foo).__name__ + '.' + foo.id
         self.assertEqual(foo, storage.all()[key])
         key = type(bar).__name__ + '.' + bar.id
@@ -149,6 +151,8 @@ class test_FileStorage(unittest.TestCase):
             foo = _cls()
             bar = _cls()
             objs = [foo, bar]
+            foo.save()
+            bar.save()
             storage.save()
 
             for obj in objs:
@@ -180,7 +184,8 @@ class test_FileStorage(unittest.TestCase):
             # Serialize some objects
             foo = _cls()
             bar = _cls()
-            storage.save()
+            foo.save()
+            bar.save()
             self.assertTrue(os.path.exists(self.file_path))
 
             # Deserialize some objects
@@ -214,7 +219,8 @@ class test_FileStorage(unittest.TestCase):
             # Create some objects
             foo = _cls()
             bar = _cls()
-            storage.save()
+            foo.save()
+            bar.save()
             self.assertTrue(os.path.exists(self.file_path))
 
             # Confirm objects were saved
