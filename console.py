@@ -5,7 +5,7 @@ import sys
 import shlex    # Unix shell-like syntax analyzer
 from utility import param_to_dict
 from models.base_model import BaseModel
-from models.__init__ import storage
+from models import storage
 from models.user import User
 from models.place import Place
 from models.state import State
@@ -235,7 +235,8 @@ class HBNBCommand(cmd.Cmd):
         key = c_name + "." + c_id
 
         try:
-            del storage.all()[key]
+            obj = storage.all()[key]
+            storage.delete(obj)
             storage.save()
         except KeyError:
             print("** no instance found **")

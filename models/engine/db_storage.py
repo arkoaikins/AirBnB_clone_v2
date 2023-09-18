@@ -105,6 +105,7 @@ class DBStorage:
         """
         if obj is not None:
             self.__session.add(obj)
+            self.save()
 
     def save(self):
         """
@@ -118,6 +119,7 @@ class DBStorage:
         """
         if obj is not None:
             self.__session.delete(obj)
+            self.save()
 
     def reload(self):
         """
