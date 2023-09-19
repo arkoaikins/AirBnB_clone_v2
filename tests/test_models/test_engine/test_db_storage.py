@@ -73,6 +73,27 @@ class test_DBStorage(unittest.TestCase):
         self.cur = self.db.cursor()
         # print("cursor created successfully!\n")     # test
 
+        # Attempt truncating table
+        query = """SHOW TABLES;"""
+        execsafe(self.cur, query)
+        tbs = self.cur.fetchall()
+        if tbs is None or len(tbs) == 0:
+            print("NO TABLES TO TEST\nEXITING")
+            exit(1)
+
+        # Disable foreign key checks
+        query = """SET FOREIGN_KEY_CHECKS = 0;"""
+        execsafe(self.cur, query)
+
+        for tb in tbs:
+            query = """TRUNCATE TABLE {};""".format(tb[0])
+            execsafe(self.cur, query)
+        print("All tables successfully cleared")
+
+        # Enable foreign key checks
+        query = """SET FOREIGN_KEY_CHECKS = 1;"""
+        execsafe(self.cur, query)
+
     def setUp(self):
         """
         Set up the environment for each test methods
