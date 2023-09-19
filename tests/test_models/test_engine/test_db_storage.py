@@ -39,7 +39,7 @@ class test_DBStorage(unittest.TestCase):
         """
         super().__init__(*args, **kwargs)
         if storage_type == 'file':
-            print("Iniatialization for database")
+            # print("Iniatialization for database")
             return
         self.value = DBStorage
         self.name = self.value.__name__
@@ -60,57 +60,21 @@ class test_DBStorage(unittest.TestCase):
         # Connection to database
         for key, val in self.db_login.items():
             if val is None:
-                print("key: {} => value : {}".format(key, val))     # test
+                # print("key: {} => value : {}".format(key, val))     # test
                 return  # not necessary to proceed
 
         # Create a connection
         self.db = MySQLdb.connect(**self.db_login)
         # Put a connection to a good use
         self.cur = self.db.cursor()
-        print("cursor created successfully!\n")     # test
-
-    '''
-    def setUp(self):
-        """
-        Set up the environment for each test methods
-        Clean all tables in the database
-        """
-        # Clean up the database
-        query = """SHOW TABLES;"""
-        params = self.db_login['db']
-
-        # Execute query
-        if execsafe(self.cur, query) is False:
-            print("Could not execute query")
-            return
-
-        print("Successfully executed query")
-        tbs = self.cur.fetchall()
-        print("Tables present")
-        print(tbs)
-
-        ordered_tbs = ['users', 'states', 'cities', 'places', 'amenities']
-        for tb in ordered_tbs:
-            if (tb,) not in tbs:
-                continue
-            query = """TRUNCATE TABLE {0};""".format(tb)
-            if not execsafe(self.cur, query):
-                print("Could not fetch table -> {}".format(tb[0]))
-                return
-
-            print("Succesfully fetched table -> {}".format(tb[0]))
-            recs = self.cur.fetchall()
-            if recs is not None:
-                for row in recs:
-                    print(row)
-    '''
+        # print("cursor created successfully!\n")     # test
 
     def setUp(self):
         """
         Set up the environment for each test methods
         Get current state of database
         """
-        print("storage_type is {}".format(storage_type))    # test
+        # print("storage_type is {}".format(storage_type))    # test
         if storage_type == 'file':
             return
 
@@ -132,7 +96,7 @@ class test_DBStorage(unittest.TestCase):
         execsafe(self.cur, """SELECT * FROM cities;""")
         self.cities = self.cur.fetchall()
 
-        print("Set up for database done successfully\n")    # test
+        # print("Set up for database done successfully\n")    # test
 
     def tearDown(self):
         """
@@ -141,7 +105,7 @@ class test_DBStorage(unittest.TestCase):
         if storage_type == 'file':
             return
         self.db.commit()
-        print("Tear down for database done successfully\n")     # test
+        # print("Tear down for database done successfully\n")     # test
 
     @skipIf(storage_type == 'file', "This test is for datbase storage")
     def test_all(self):
@@ -158,6 +122,13 @@ class test_DBStorage(unittest.TestCase):
         # self.db.commit()
         execsafe(self.cur, """SELECT * FROM states;""")
         states = self.cur.fetchall()
-        print("len(self.states): {}".format(len(self.states)))
-        print("len(states): {}".format(len(states)))
+        # print("len(self.states): {}".format(len(self.states)))
+        # print("len(states): {}".format(len(states)))
         self.assertTrue(len(states) == len(self.states) + 1)
+
+    @skipIf(storage_type == 'file', "This test is for datbase storage")
+    def test_new(self):
+        """
+        Ensure the new method is implemented
+        """
+        pass
