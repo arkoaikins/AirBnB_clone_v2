@@ -15,6 +15,7 @@ file_storage = 'file'
 if storage_type == db_storage:
     storage = DBStorage()
 else:
+    storage_type = 'file'
     storage = FileStorage()
 
 storage.reload()

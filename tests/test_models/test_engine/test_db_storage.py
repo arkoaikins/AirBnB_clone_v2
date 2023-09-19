@@ -10,6 +10,7 @@ Execution:
 import unittest
 import pep8
 import MySQLdb
+import models
 from models import storage_type
 from models.engine.db_storage import DBStorage
 from models.base_model import BaseModel
@@ -22,6 +23,7 @@ from models.review import Review
 from tests import config
 from os import getenv
 from utility import execsafe
+from unittest import (skipIf, skipUnless)
 
 
 class test_DBStorage(unittest.TestCase):
@@ -36,6 +38,9 @@ class test_DBStorage(unittest.TestCase):
         Initialiaze the test instance
         """
         super().__init__(*args, **kwargs)
+        if storage_type == 'file':
+            print("Iniatialization for database")
+            return
         self.value = DBStorage
         self.name = self.value.__name__
 
@@ -49,12 +54,20 @@ class test_DBStorage(unittest.TestCase):
         # Defaults
         if self.db_login['port'] is None:
             self.db_login['port'] = 3306
+        if self.db_login['host'] is None:
+            self.db_login['host'] = 'localhost'
 
         # Connection to database
-        self.db = MySQLdb.connect(**self.db_login)
+        for key, val in self.db_login.items():
+            if val is None:
+                print("key: {} => value : {}".format(key, val))     # test
+                return  # not necessary to proceed
 
+        # Create a connection
+        self.db = MySQLdb.connect(**self.db_login)
         # Put a connection to a good use
         self.cur = self.db.cursor()
+        print("cursor created successfully!\n")     # test
 
     '''
     def setUp(self):
@@ -97,6 +110,10 @@ class test_DBStorage(unittest.TestCase):
         Set up the environment for each test methods
         Get current state of database
         """
+        print("storage_type is {}".format(storage_type))    # test
+        if storage_type == 'file':
+            return
+
         execsafe(self.cur, """SELECT * FROM states;""")
         self.states = self.cur.fetchall()
 
@@ -115,12 +132,18 @@ class test_DBStorage(unittest.TestCase):
         execsafe(self.cur, """SELECT * FROM cities;""")
         self.cities = self.cur.fetchall()
 
+        print("Set up for database done successfully\n")    # test
+
     def tearDown(self):
         """
         Finishing tasks for a test
         """
+        if storage_type == 'file':
+            return
         self.db.commit()
+        print("Tear down for database done successfully\n")     # test
 
+    @skipIf(storage_type == 'file', "This test is for datbase storage")
     def test_all(self):
         """
         Testing the all method
