@@ -26,6 +26,10 @@ from utility import execsafe
 from unittest import (skipIf, skipUnless)
 
 
+if storage_type == 'db':
+    from models.place import place_amenity
+
+
 class test_DBStorage(unittest.TestCase):
     """
     Define tests for the ``DBStorage`` class
@@ -96,6 +100,9 @@ class test_DBStorage(unittest.TestCase):
         execsafe(self.cur, """SELECT * FROM cities;""")
         self.cities = self.cur.fetchall()
 
+        execsafe(self.cur, """SELECT * FROM place_amenity;""")
+        self.place_amenity = self.cur.fetchall()
+
         # print("Set up for database done successfully\n")    # test
 
     def tearDown(self):
@@ -131,4 +138,92 @@ class test_DBStorage(unittest.TestCase):
         """
         Ensure the new method is implemented
         """
-        pass
+        # State
+        s = State(name="Enugu")
+        s_d = s.to_dict()
+        query = """INSERT INTO states(id, name, updated_at, created_at)
+                    VALUES ('{}', '{}', '{}', '{}')""".format(
+                    s_d['id'], s_d['name'], s_d['updated_at'],
+                    s_d['created_at'])
+        execsafe(self.cur, query)
+        execsafe(self.cur, """SELECT * FROM states;""")
+        s_objs = self.cur.fetchall()
+        self.assertTrue(len(s_objs) == len(self.states) + 1)
+
+        # City
+        c = City(name="Abakpa", state_id=s.id)
+        c_d = c.to_dict()
+        query = """INSERT INTO cities(id, state_id, name, updated_at,
+                    created_at)
+                    VALUES ('{}', '{}', '{}', '{}', '{}')""".format(
+                    c_d['id'], c_d['state_id'], c_d['name'],
+                    c_d['updated_at'], c_d['created_at'])
+        execsafe(self.cur, query)
+        execsafe(self.cur, """SELECT * FROM cities;""")
+        c_objs = self.cur.fetchall()
+        self.assertTrue(len(c_objs) == len(self.cities) + 1)
+
+        # User
+        u = User(email="ebube@gmail.com", password="ebube123",
+                 first_name="Ebube", last_name="Onwuta")
+        u_d = u.to_dict()
+        query = """INSERT INTO users(id, email, password, first_name,
+                    last_name, updated_at, created_at)
+                    VALUES ('{}', '{}', '{}', '{}', '{}', '{}',
+                    '{}')""".format(
+                    u_d['id'], u_d['email'], u_d['password'],
+                    u_d['first_name'], u_d['last_name'],
+                    u_d['updated_at'], u_d['created_at'])
+        execsafe(self.cur, query)
+        execsafe(self.cur, """SELECT * FROM users;""")
+        u_objs = self.cur.fetchall()
+        self.assertTrue(len(u_objs) == len(self.users) + 1)
+
+        # Amenity
+        a = Amenity(name="wifi")
+        a_d = a.to_dict()
+        query = """INSERT INTO amenities(id, name, updated_at, created_at)
+                    VALUES ('{}', '{}', '{}', '{}')""".format(
+                    a_d['id'], a_d['name'], a_d['updated_at'],
+                    a_d['created_at'])
+        execsafe(self.cur, query)
+        execsafe(self.cur, """SELECT * FROM amenities;""")
+        a_objs = self.cur.fetchall()
+        self.assertTrue(len(a_objs) == len(self.amenities) + 1)
+
+        # Place
+        p = Place(name="BrainSpark Hub", city_id=c.id, user_id=u.id)
+        p_d = p.to_dict()
+        query = """INSERT INTO places(id, city_id, user_id, name,
+                    updated_at, created_at, number_rooms, number_bathrooms,
+                    max_guest, price_by_night)
+                    VALUES ('{}', '{}', '{}', '{}', '{}', '{}', 0,
+                    0, 0, 0)""".format(
+                    p_d['id'], p_d['city_id'], p_d['user_id'], p_d['name'],
+                    p_d['updated_at'], p_d['created_at'])
+        execsafe(self.cur, query)
+        execsafe(self.cur, """SELECT * FROM places;""")
+        p_objs = self.cur.fetchall()
+        self.assertTrue(len(p_objs) == len(self.places) + 1)
+
+        # place_amenity -> An association table for the Many-to-Many
+        # Relationship between Place and Amenity models
+        query = """INSERT INTO place_amenity(amenity_id, place_id)
+                    VALUES ('{}', '{}')""".format(a.id, p.id)
+        execsafe(self.cur, query)
+        execsafe(self.cur, """SELECT * FROM place_amenity;""")
+        place_amenity_objs = self.cur.fetchall()
+        self.assertTrue(len(place_amenity_objs) == len(self.place_amenity) + 1)
+
+        # Review
+        r = Review(text="The world of my fantasy", user_id=u.id, place_id=p.id)
+        r_d = r.to_dict()
+        query = """INSERT INTO reviews(id, user_id, place_id, text, updated_at,
+                    created_at)
+                    VALUES ('{}', '{}', '{}', '{}', '{}', '{}')""".format(
+                    r_d['id'], r_d['user_id'], r_d['place_id'],
+                    r_d['text'], r_d['updated_at'], r_d['created_at'])
+        execsafe(self.cur, query)
+        execsafe(self.cur, """SELECT * FROM reviews;""")
+        r_objs = self.cur.fetchall()
+        self.assertTrue(len(r_objs) == len(self.reviews) + 1)
