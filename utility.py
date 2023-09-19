@@ -3,6 +3,7 @@
 This module contains some helper functions
 """
 import re   # For regular expression
+import MySQLdb
 
 
 def param_to_dict(text=str()):
@@ -69,3 +70,35 @@ can’t be recognized correctly by your program, it must be skipped
 
     attribute = {key_name: value}
     return attribute
+
+
+def execsafe(cur, query, params=None):
+    """
+    Safely execute a query on a cursor
+
+    cur     -> a cursor object
+    query   -> a query to execute
+    params -> a tuple of parameters
+
+    return False if execution error else True
+    """
+    if cur is None or query is None:
+        return False
+
+    try:
+        if params is not None:
+            if type(params) is not tuple:
+                print("parameters must be a tuple")
+                return False
+
+            cur.execute(query, params)
+        else:
+            cur.execute(query)
+    except MySQLdb.Error as e:
+        try:
+            print("MySQL Error [{:d}]: {}".format(e.args[0], e.args[1]))
+        except IndexError:
+            print("MySQL Error: {}".format(str(e)))
+        return False
+
+    return True
