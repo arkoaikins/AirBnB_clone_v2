@@ -88,11 +88,11 @@ class test_DBStorage(unittest.TestCase):
         for tb in tbs:
             query = """TRUNCATE TABLE {};""".format(tb[0])
             execsafe(self.cur, query)
-        print("All tables successfully cleared")
 
         # Enable foreign key checks
         query = """SET FOREIGN_KEY_CHECKS = 1;"""
         execsafe(self.cur, query)
+        # print("All tables successfully cleared")
 
     def setUp(self):
         """
