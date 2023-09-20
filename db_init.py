@@ -81,6 +81,25 @@ review_2.user_id = user_2.id
 review_2.text = "Great for tech events and programmes"
 review_2.save()
 
+amenity_1 = Amenity()
+amenity_1.name = "Wifi"
+amenity_1.save()
+
+amenity_2 = Amenity()
+amenity_2.name = "Pets"
+amenity_2.save()
+
+amenity_3 = Amenity()
+amenity_3.name = "Tv"
+amenity_3.save()
+
+place_1.amenities.append(amenity_1)
+place_1.amenities.append(amenity_3)
+place_1.save()
+
+place_2.amenities.append(amenity_2)
+place_2.save()
+
 storage.save()
 
 print("OK")
