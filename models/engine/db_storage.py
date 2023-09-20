@@ -145,3 +145,9 @@ class DBStorage:
 
         Session = scoped_session(session_factory)
         self.__session = Session()
+
+    def close(self):
+        """
+        Close connection to database storage
+        """
+        self.__session.close()

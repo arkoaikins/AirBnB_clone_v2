@@ -80,3 +80,9 @@ class FileStorage:
             pass
 
         self.save()
+
+    def close(self):
+        """
+        Close connection to storage
+        """
+        pass

@@ -2,6 +2,7 @@
 """ Console Module """
 import cmd
 import sys
+import models
 import shlex    # Unix shell-like syntax analyzer
 from utility import param_to_dict
 from models.base_model import BaseModel
@@ -12,7 +13,6 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
-import models
 
 
 class HBNBCommand(cmd.Cmd):
@@ -100,6 +100,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_quit(self, command):
         """ Method to exit the HBNB console"""
+        storage.close()
         exit()
 
     def do_EOF(self, arg):

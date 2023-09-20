@@ -254,6 +254,14 @@ class test_FileStorage(unittest.TestCase):
 
             self.tearDown()
 
+    @unittest.skipIf(models.storage_type == 'db', "For file storage")
+    def test_close(self):
+        """
+        Ensure that the close method of FileStorage is implemented
+        """
+        # The method FileStorage.close() does nothing
+        pass
+
     @staticmethod
     def get_key(obj):
         """
