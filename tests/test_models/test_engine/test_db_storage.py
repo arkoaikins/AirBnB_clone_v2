@@ -58,6 +58,13 @@ class test_DBStorage(unittest.TestCase):
         # Defaults
         if self.db_login['port'] is None:
             self.db_login['port'] = 3306
+        else:   # attempt converting to integer
+            try:
+                val = int(self.db_login['port'])
+            except TypeError:
+                val = 3306
+            self.db_login['port'] = val
+
         if self.db_login['host'] is None:
             self.db_login['host'] = 'localhost'
 
