@@ -135,7 +135,7 @@ class test_DBStorage(unittest.TestCase):
         self.db.commit()
         # print("Tear down for database done successfully\n")     # test
 
-    @skipIf(storage_type == 'file', "This test is for datbase storage")
+    @skipIf(storage_type == 'file', "This test is for database storage")
     def test_all(self):
         """
         Testing the all method
@@ -154,7 +154,7 @@ class test_DBStorage(unittest.TestCase):
         # print("len(states): {}".format(len(states)))
         self.assertTrue(len(states) == len(self.states) + 1)
 
-    @skipIf(storage_type == 'file', "This test is for datbase storage")
+    @skipIf(storage_type == 'file', "This test is for database storage")
     def test_new(self):
         """
         Ensure the new method is implemented
@@ -248,3 +248,41 @@ class test_DBStorage(unittest.TestCase):
         execsafe(self.cur, """SELECT * FROM reviews;""")
         r_objs = self.cur.fetchall()
         self.assertTrue(len(r_objs) == len(self.reviews) + 1)
+
+    @skipIf(storage_type == 'file', "This test is for database storage")
+    def test_save(self):
+        """
+        Ensure that the save method saves changes made in a session
+        """
+        # State
+        prev_name = "Anambra"
+        s = State(name=prev_name)
+        s_d = s.to_dict()
+        query = """INSERT INTO states(id, name, updated_at, created_at)
+                    VALUES ('{}', '{}', '{}', '{}')""".format(
+                    s_d['id'], s_d['name'], s_d['updated_at'],
+                    s_d['created_at'])
+        execsafe(self.cur, query)
+        execsafe(self.cur, """SELECT * FROM states;""")
+        s_objs = self.cur.fetchall()
+        self.assertTrue(len(s_objs) == len(self.states) + 1)
+
+        # Make changes to State
+        new_name = "Abuja"
+        query = """UPDATE states
+                    SET states.name = '{}'
+                    WHERE states.id = '{}'""".format(new_name, s.id)
+        execsafe(self.cur, query)
+
+        # Confirm reflection of changes made
+        query = """SELECT name
+                    FROM states
+                    WHERE states.id = '{}'""".format(s.id)
+        execsafe(self.cur, query)
+
+        s_obj = self.cur.fetchone()
+        if s_obj is None or len(s_obj) == 0:
+            print("Could not get state object\nEXITING")
+            exit(1)
+
+        self.assertEqual(new_name, s_obj[0])
