@@ -314,3 +314,21 @@ class test_DBStorage(unittest.TestCase):
 
         item = (str(s.id),)
         self.assertNotIn(item, s_objs)
+
+    '''
+    @skipIf(storage_type == 'file', "This test is for database storage")
+    def test_close(self):
+        """
+        Ensure that the close method of DBStorage is implemented
+        """
+        errno = 2006    # number for this MySQLdb error
+        cursor = self.db.cursor()
+        # cursor.execute.side_effect = MySQLdb.OperationalError(errno, '')
+        self.db.close()
+        query = """SELECT * from states;"""
+
+        with self.assertRaises(MySQLdb.OperationalError) as context:
+            cursor.execute(query)
+
+        self.assertEqual(context.exception.args[0], errno)
+    '''
