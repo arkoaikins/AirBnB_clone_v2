@@ -73,7 +73,7 @@ class DBStorage:
 
         # Update it Always after mapping a class
         # classes = [City, State, Place, User, Amenity, Review]
-        classes = [City, State, User, Place, Review]
+        classes = [City, State, User, Place, Review, Amenity]
 
         objs = list()
         if cls is None:
