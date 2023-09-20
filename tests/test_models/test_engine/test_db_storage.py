@@ -286,3 +286,31 @@ class test_DBStorage(unittest.TestCase):
             exit(1)
 
         self.assertEqual(new_name, s_obj[0])
+
+    @skipIf(storage_type == 'file', "This test is for database storage")
+    def test_delete(self):
+        """
+        Ensure that that an item can be deleted from the database
+        """
+        # State
+        prev_name = "Bayelsa"
+        s = State(name=prev_name)
+        s_d = s.to_dict()
+        query = """INSERT INTO states(id, name, updated_at, created_at)
+                    VALUES ('{}', '{}', '{}', '{}')""".format(
+                    s_d['id'], s_d['name'], s_d['updated_at'],
+                    s_d['created_at'])
+        execsafe(self.cur, query)
+        execsafe(self.cur, """SELECT * FROM states;""")
+        s_objs = self.cur.fetchall()
+        self.assertTrue(len(s_objs) == len(self.states) + 1)
+
+        # Delete this object
+        query = """DELETE FROM states
+                    WHERE states.id = '{}'""".format(s.id)
+        execsafe(self.cur, query)
+        execsafe(self.cur, """SELECT states.id FROM states;""")
+        s_objs = self.cur.fetchall()
+
+        item = (str(s.id),)
+        self.assertNotIn(item, s_objs)
