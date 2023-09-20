@@ -100,7 +100,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_quit(self, command):
         """ Method to exit the HBNB console"""
-        storage.close()
+        # storage.close()
         exit()
 
     def do_EOF(self, arg):
