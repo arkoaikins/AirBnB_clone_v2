@@ -2,8 +2,8 @@
 # Prepare your web servers
 
 # Install Nginx
-apt-get -y purge nginx nginx-common
-apt-get -y autoremove
+# apt-get -y purge nginx nginx-common
+# apt-get -y autoremove
 apt-get -y update
 apt-get -y install nginx
 ufw allow 'Nginx HTTP'
@@ -42,10 +42,44 @@ chown -R "$USER":"$USER" /data/
 # Update Nginx configuration
 nginx_conf=/etc/nginx/sites-enabled/default
 
-old_string="server_name _;"
-new_string="server_name _;\n\n\tlocation /hbnb_static/ {\n\t\t# project location\n\t\talias /data/web_static/current/;\n\t\tautoindex off;\n\t}\n"
+# shellcheck disable=SC2016
+printf %s '# Configuration for server - ONWUTA EBUBE GIDEON
+server {
+	listen 80 default_server;
+	listen [::]:80 default_server;
 
-sed -i "/$old_string/c$new_string" "$nginx_conf"
+	root /var/www/html;
+
+	# Add index
+	index index.html
+
+	server_name _;
+
+	location /hbnb_static {
+		# Select directory
+		alias /data/web_static/current/;
+		autoindex off;
+	}
+
+	location / {
+		# First attempt to serve a request as file, then
+		# as directiory, then fall back to dispalying a 404 ERROR.
+		try_files $uri $uri/ =404;
+	}
+
+	location /redirect_me {
+		# Have fun with redirection
+		return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+	}
+
+	# Create a custom 404 error page
+	error_page 404 /404.html;
+	location = /404.html {
+		# to ensure it cannot be accessed directly by clients
+		internal;
+	}
+}' > "$nginx_conf"
+
 
 # Upload changes
 service nginx restart
