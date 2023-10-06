@@ -31,9 +31,9 @@ test_dir=/data/web_static/releases/test/
 
 if [ -L "$web_current" ]; then
 	rm --recursive "$web_current";
-	ln --symbolic "$test_dir" "$web_current"
+	ln --symbolic --force "$test_dir" "$web_current"
 else
-	ln --symbolic "$test_dir" "$web_current"
+	ln --symbolic --force "$test_dir" "$web_current"
 fi
 
 # Ownership
