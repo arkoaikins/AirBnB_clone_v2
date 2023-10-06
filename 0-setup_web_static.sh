@@ -30,7 +30,7 @@ web_current=/data/web_static/current
 test_dir=/data/web_static/releases/test/
 
 if [ -L "$web_current" ]; then
-	rm --recursive "$web_current";
+	# rm --recursive "$web_current";
 	ln --symbolic --force "$test_dir" "$web_current"
 else
 	ln --symbolic --force "$test_dir" "$web_current"
