@@ -12,7 +12,7 @@ ufw allow 'Nginx HTTP'
 mkdir --parents /data/
 
 # Ownership
-chown --recursive "$USER":"$USER" /data/
+chown --recursive ubuntu:ubuntu /data/
 
 mkdir --parents /data/web_static/
 mkdir --parents /data/web_static/releases/
