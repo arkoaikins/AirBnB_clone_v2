@@ -10,3 +10,6 @@ __pycache__/
 
 # Virtual environment
 venv/
+
+# Folder for compiled scripts
+versions/
