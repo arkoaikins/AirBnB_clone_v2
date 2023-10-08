@@ -52,5 +52,5 @@ def do_deploy(archive_path):
     run(cmd)
 
     # Confirmation
-    print("New version deployed!")
+    # print("New version deployed!")
     return True
