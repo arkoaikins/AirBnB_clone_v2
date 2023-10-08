@@ -24,33 +24,45 @@ def do_deploy(archive_path):
     # print("Unzipped: {}".format(unzipped))
 
     # Upload archive
-    run("mkdir --parents /tmp/")
-    put(local_path=archive_path, remote_path="/tmp/")
+    if run("mkdir --parents /tmp/").failed is True:
+        return False
+
+    if put(local_path=archive_path, remote_path="/tmp/").failed is True:
+        return False
 
     # Uncompress archive
     cmd = "mkdir --parents /data/web_static/releases/{}/".format(unzipped)
-    run(cmd)
+    if run(cmd).failed is True:
+        return False
 
     cmd = "tar -xzf /tmp/{} -C /data/web_static/releases/{}/"
     cmd = cmd.format(archive, unzipped)
-    run(cmd)
+    if run(cmd).failed is True:
+        return False
 
     # remove temporary file
-    cmd = "rm /tmp/{}".format(archive)
-    run(cmd)
-    cmd = "mv /data/web_static/releases/{}/web_static/*".format(unzipped)
+    cmd = "rm --force /tmp/{}".format(archive)
+    if run(cmd).failed is True:
+        return False
+
+    cmd = "mv -f /data/web_static/releases/{}/web_static/*".format(unzipped)
     cmd = cmd + " /data/web_static/releases/{}/".format(unzipped)
-    run(cmd)
+    if run(cmd).failed is True:
+        return False
 
     cmd = "rm -rf /data/web_static/releases/{}/web_static".format(unzipped)
-    run(cmd)
+    if run(cmd).failed is True:
+        return False
 
     # Relink deployed code
-    run("rm -rf /data/web_static/current")
-    cmd = "ln -s /data/web_static/releases/{}/".format(unzipped)
+    if run("rm -rf /data/web_static/current").failed is True:
+        return False
+
+    cmd = "ln -sf /data/web_static/releases/{}/".format(unzipped)
     cmd = cmd + " /data/web_static/current"
-    run(cmd)
+    if run(cmd).failed is True:
+        return False
 
     # Confirmation
-    # print("New version deployed!")
+    print("New version deployed!")
     return True
