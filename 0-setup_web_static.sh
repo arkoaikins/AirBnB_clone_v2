@@ -39,7 +39,7 @@ if [ -L "$sym_link" ]; then
 	rm "$sym_link"
 fi
 
-ln -sf "$linked_to" "$sym_link"
+sudo ln -sf "$linked_to" "$sym_link"
 
 # Give ownership of /data/ to ubuntu user and group recursively
 sudo chown -R ubuntu:ubuntu /data/
@@ -49,5 +49,3 @@ sudo sed -i '66 i\ \tlocation /hbnb_static {\n\t\talias /data/web_static/current
 
 # Restart nginx to effect changes
 sudo service nginx restart
-
-
