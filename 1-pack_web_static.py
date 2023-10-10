@@ -14,17 +14,17 @@ def do_pack():
     Returns:The archive path if created correctly else return None
     """
     try:
-        local("mkdir -p versions")    
+        local("mkdir -p versions")
         # create the time for the archive files
         arc_time = datetime.now().strftime('%Y%m%d%H%M%S')
 
-        # create the compressed file 
+        # create the compressed file
         arc_path = "versions/web_static_{}.tgz".format(arc_time)
         local("tar -czvf {} web_static".format(arc_path))
         # check if the archive was correctly generated
         if local("test -e {}".format(arc_path), capture=True):
 
-            return arc_path 
+            return arc_path
         else:
             return None
     except Exception as e:
