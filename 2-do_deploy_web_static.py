@@ -7,15 +7,16 @@ from fabric.api import env, run, put, cd
 
 env.hosts = ['54.90.14.86', '54.160.114.180']
 
+
 def do_deploy(archive_path):
     """
     Fabric script (based on the file 1-pack_web_static.py) that
     distributes an archive to your web servers.
-    
+
     Returns:
         True if all operations have been done correctly, else return False
     """
-    
+
     # Check if the archive file exists locally
     if not os.path.exists(archive_path):
         return False
@@ -33,7 +34,8 @@ def do_deploy(archive_path):
     with cd('/data/web_static/releases'):
         run("mkdir -p {}".format(arc_dir))
         with cd('/tmp'):
-            run("tar -xzf {} -C /data/web_static/releases/{}/".format(arc_file, arc_dir))
+            run("tar -xzf {} -C /data/web_static/releases/{}/"
+                .format(arc_file, arc_dir))
 
     # Delete the archive from the web server
     run("rm /tmp/{}".format(arc_file))
