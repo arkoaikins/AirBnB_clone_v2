@@ -32,7 +32,7 @@ def do_deploy(archive_path):
         put(archive_path, '/tmp/')
         # Uncompress the archive to a folder on the web server
         run('mkdir -p {}{}/'.format(serv_fld, arc_dir))
-        run('tar -xzf /tmp/{} -C {}{}/'.format(file_n, path, no_ext))
+        run('tar -xzf /tmp/{} -C {}{}/'.format(arc_file, serv_fld, arc_dir))
         # Delete the archive from the web server
         run('rm /tmp/{}'.format(arc_file))
         run('mv {0}{1}/web_static/* {0}{1}/'.format(serv_fld, arc_dir))
