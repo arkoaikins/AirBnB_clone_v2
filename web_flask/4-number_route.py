@@ -5,6 +5,7 @@ Route "/" displays "Hello HBNB!"
 Route "/hbnb" displays "HBNB"
 Route "/c/<text>:displays "C" followed by the value of the text variable
 Route "/python/<text>:displays "python" followed by the value of the text
+Route "/number/<n>:displays "n is a number" only n is an integer
 """
 from flask import Flask
 app = Flask(__name__)
