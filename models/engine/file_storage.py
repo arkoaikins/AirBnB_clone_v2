@@ -83,6 +83,6 @@ class FileStorage:
 
     def close(self):
         """
-        Close connection to storage
+        deserializing the JSON file to objects
         """
-        pass
+        self.reload()
