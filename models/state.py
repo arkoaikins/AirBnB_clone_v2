@@ -4,10 +4,11 @@ import models
 from models.base_model import BaseModel
 from models.base_model import Base
 from models.city import City
-from sqlalchemy import (Column, String)
-from sqlalchemy.orm import (relationship)
+from sqlalchemy import Column, Integer, String, Foreignkey, MetaDate
+from sqlalchemy.orm import relationship
 from models import DBStorage
 from models import FileStorage
+from os import environ
 
 
 class State(BaseModel, Base):
